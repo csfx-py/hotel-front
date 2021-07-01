@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/hotel-front/static/css/main.6351e559.chunk.css",
+    "main.js": "/hotel-front/static/js/main.152ad47c.chunk.js",
+    "main.js.map": "/hotel-front/static/js/main.152ad47c.chunk.js.map",
+    "runtime-main.js": "/hotel-front/static/js/runtime-main.ecf89daf.js",
+    "runtime-main.js.map": "/hotel-front/static/js/runtime-main.ecf89daf.js.map",
+    "static/js/2.d611e670.chunk.js": "/hotel-front/static/js/2.d611e670.chunk.js",
+    "static/js/2.d611e670.chunk.js.map": "/hotel-front/static/js/2.d611e670.chunk.js.map",
+    "static/js/3.ee4b85c5.chunk.js": "/hotel-front/static/js/3.ee4b85c5.chunk.js",
+    "static/js/3.ee4b85c5.chunk.js.map": "/hotel-front/static/js/3.ee4b85c5.chunk.js.map",
+    "index.html": "/hotel-front/index.html",
+    "static/css/main.6351e559.chunk.css.map": "/hotel-front/static/css/main.6351e559.chunk.css.map",
+    "static/js/2.d611e670.chunk.js.LICENSE.txt": "/hotel-front/static/js/2.d611e670.chunk.js.LICENSE.txt",
+    "static/media/welcome.73d50b7d.svg": "/hotel-front/static/media/welcome.73d50b7d.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ecf89daf.js",
+    "static/js/2.d611e670.chunk.js",
+    "static/css/main.6351e559.chunk.css",
+    "static/js/main.152ad47c.chunk.js"
+  ]
+}
