@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { DataProvider } from "./contexts/DataContext";
 import { AuthContext } from "./contexts/AuthContext";
 import Home from "./routes/Home";
