@@ -11,7 +11,7 @@ export const DataProvider = ({
   setLoading,
 }) => {
   const api = axios.create({
-    baseURL: `http://localhost:5000/data`,
+    baseURL: `http://localhost:5000/hotel`,
     withCredentials: true,
     headers: { auth: user?.token ? user.token : "" },
   });
@@ -69,13 +69,10 @@ export const DataProvider = ({
     }
   };
 
-  useEffect(() => {
-    fetchMenu({ shopName: user.shopName });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, user]);
-
   return (
-    <DataContext.Provider value={{ menu, addMenuItem, deleteMenuItem }}>
+    <DataContext.Provider
+      value={{ menu, fetchMenu, addMenuItem, deleteMenuItem }}
+    >
       {children}
     </DataContext.Provider>
   );

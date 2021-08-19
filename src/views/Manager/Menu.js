@@ -6,9 +6,9 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import DataTable from "../components/DataTable";
-import { DataContext } from "../contexts/DataContext";
-import { AuthContext } from "../contexts/AuthContext";
+import DataTable from "../../components/DataTable";
+import { AuthContext } from "../..//contexts/AuthContext";
+import { DataContext } from "../..//contexts/DataContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,10 +38,25 @@ function Menu() {
   const classes = useStyles();
 
   const { setLoading } = useContext(AuthContext);
-  const { menu, addMenuItem, deleteMenuItem } = useContext(DataContext);
+  const { menu, fetchMenu, addMenuItem, deleteMenuItem } =
+    useContext(DataContext);
 
   const [item, setItem] = useState({ itemPame: "", itemPrice: 0 });
   const [rows, setRows] = useState(menu);
+
+  const getMenu = async () => {
+    setLoading(true);
+    try {
+      setRows(await fetchMenu());
+    } catch (e) {
+      console.log(e);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getMenu();
+  }, []);
 
   useEffect(() => {
     setRows(menu);

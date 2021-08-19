@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AppBar, makeStyles, Tab, Tabs } from "@material-ui/core";
 import TabPanel from "../components/TabPanel";
-import Menu from "../views/Menu";
+import Menu from "../views/Manager/Menu";
 
 const useStyles = makeStyles((theme) => ({
   root: {
