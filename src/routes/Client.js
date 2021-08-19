@@ -3,6 +3,8 @@ import { useHistory, useParams } from "react-router-dom";
 import { ClientContext } from "../contexts/ClientContext";
 import { AppBar, makeStyles, Tab, Tabs } from "@material-ui/core";
 import TabPanel from "../components/TabPanel";
+import Menu from "../views/Client/Menu";
+import Cart from "../views/Client/Cart";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,8 +46,12 @@ function Client() {
           <Tab label="Orders" />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0}></TabPanel>
-      <TabPanel value={value} index={1}></TabPanel>
+      <TabPanel value={value} index={0}>
+        <Menu />
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <Cart />
+      </TabPanel>
       <TabPanel value={value} index={2}></TabPanel>
     </div>
   );

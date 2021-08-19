@@ -15,31 +15,37 @@ export const ClientProvider = ({
   });
 
   const [menu, setMenu] = useState([]);
+  const [cart, setCart] = useState([]);
 
   const fetchMenu = async (shopName) => {
     setMessage("");
+    setLoading(true);
     try {
       const response = await api.get("/menu", {
         params: {
           shopName,
         },
       });
+      setLoading(false);
       if (response.status === 200 && response.data.length > 0)
         return setMenu(response.data);
       return setMessage(response.data);
     } catch (error) {
+      setLoading(false);
       setMessage(error.message);
     }
   };
 
   const checkHotel = async (shopName) => {
     setMessage("");
+    setLoading(true);
     try {
       const response = await api.get("/hotel", {
         params: {
           shopName,
         },
       });
+      setLoading(false);
 
       if (response.status === 200 && response.data) {
         setMessage(`Welcome to ${response.data}`);
@@ -48,13 +54,14 @@ export const ClientProvider = ({
       }
       return false;
     } catch (error) {
+      setLoading(false);
       setMessage("hotel not found");
       return false;
     }
   };
 
   return (
-    <ClientContext.Provider value={{ menu, checkHotel }}>
+    <ClientContext.Provider value={{ menu, checkHotel, cart, setCart }}>
       {children}
     </ClientContext.Provider>
   );

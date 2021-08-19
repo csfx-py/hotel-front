@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@material-ui/core";
 import { useState } from "react";
-import { MdDeleteForever } from "react-icons/md";
+import { MdAddShoppingCart, MdDeleteForever } from "react-icons/md";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function DataTable({ columns, rows, handleDelete }) {
+function DataTable({ columns, rows, handleDelete, handleAdd }) {
   const classes = useStyles();
 
   const [page, setPage] = useState(0);
@@ -59,7 +59,9 @@ function DataTable({ columns, rows, handleDelete }) {
                   <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                     {columns.map((column) => {
                       const value =
-                        column.id === "del" ? (
+                        column.id !== "del" && column.id !== "add" ? (
+                          row[column.id]
+                        ) : column.id === "del" ? (
                           <Button
                             color="secondary"
                             size="small"
@@ -67,10 +69,18 @@ function DataTable({ columns, rows, handleDelete }) {
                               handleDelete(row);
                             }}
                           >
-                            <MdDeleteForever fontSize="1.2rem" />
+                            <MdDeleteForever fontSize="1.4rem" />
                           </Button>
                         ) : (
-                          row[column.id]
+                          <Button
+                            color="secondary"
+                            size="small"
+                            onClick={(e) => {
+                              handleAdd(row);
+                            }}
+                          >
+                            <MdAddShoppingCart fontSize="1.4rem" />
+                          </Button>
                         );
                       return (
                         <TableCell key={column.id} align={column.align}>
