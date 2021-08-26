@@ -8,8 +8,8 @@ import {
 } from "@material-ui/core";
 import { BsFillShieldLockFill } from "react-icons/bs";
 import { useContext, useState } from "react";
-import { AuthContext } from "../contexts/AuthContext";
 import { Link, useHistory } from "react-router-dom";
+import { ClientContext } from "../../contexts/ClientContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,12 +34,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function LoginCard() {
+function ClientLogin() {
   const classes = useStyles();
 
   const history = useHistory();
 
-  const { login } = useContext(AuthContext);
+  const { login, status } = useContext(ClientContext);
 
   const [credentials, setCredentials] = useState({
     name: "",
@@ -58,7 +58,8 @@ function LoginCard() {
       try {
         const res = await login({ name, password });
         setCredentials({ name: "", password: "" });
-        if (res) history.push("/hotel");
+        if (res)
+          history.push(`/hotel/${status.hotelID}/${status.tableID}/authorized`);
       } catch (err) {
         console.error(err);
       }
@@ -74,11 +75,7 @@ function LoginCard() {
     >
       <Grid item>
         <Paper className={classes.paper} elevation={8}>
-          <form
-            onSubmit={handleSubmit}
-            autocomplete="off"
-            className={classes.form}
-          >
+          <form onSubmit={handleSubmit} className={classes.form}>
             <BsFillShieldLockFill color="#10b981" fontSize="2rem" />
             <Typography variant="h5" component="h2" align="center">
               Sign In
@@ -124,4 +121,4 @@ function LoginCard() {
   );
 }
 
-export default LoginCard;
+export default ClientLogin;

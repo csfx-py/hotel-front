@@ -43,7 +43,7 @@ function Cart() {
 
   const { setLoading } = useContext(AuthContext);
 
-  const { menu, cart, setCart } = useContext(ClientContext);
+  const { cart, setCart } = useContext(ClientContext);
 
   const [rows, setRows] = useState(cart);
 
@@ -57,6 +57,7 @@ function Cart() {
   useEffect(() => {
     setRows(cart);
   }, [cart]);
+
   return (
     <div className={classes.root}>
       <DataTable rows={rows} columns={columns} handleDelete={handleDelete} />

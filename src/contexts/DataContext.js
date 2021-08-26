@@ -1,15 +1,12 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import axios from "axios";
+import { AuthContext } from "./AuthContext";
 
 export const DataContext = createContext();
 
-export const DataProvider = ({
-  children,
-  user,
-  setMessage,
-  loading,
-  setLoading,
-}) => {
+export const DataProvider = ({ children }) => {
+  const { user, setMessage, setLoading } = useContext(AuthContext);
+
   const api = axios.create({
     baseURL: `http://localhost:5000/hotel`,
     withCredentials: true,
@@ -18,19 +15,20 @@ export const DataProvider = ({
 
   const [menu, setMenu] = useState([]);
 
-  const fetchMenu = async ({ shopName }) => {
+  const fetchMenu = async () => {
     setMessage("");
     try {
       const res = await api.get("/menu", {
         params: {
-          shopName,
+          shopName: user.shopName,
         },
       });
       if (res.status === 200 && res.data.length > 0) {
         return setMenu(res.data);
       }
+      return setMessage(res.data);
     } catch (e) {
-      return setMessage("fetching menu failed");
+      return console.log(e.message);
     }
   };
 
@@ -43,11 +41,12 @@ export const DataProvider = ({
         shopName: user.shopName,
       });
       if (res.status === 200 && res.data.length > 0) {
+        fetchMenu(user.shopName);
         return setLoading(false);
       }
     } catch (e) {
-      setLoading(false);
-      return setMessage(e.message);
+      setMessage(e.message);
+      return setLoading(false);
     }
   };
 
@@ -61,11 +60,12 @@ export const DataProvider = ({
         },
       });
       if (res.status === 200 && res.data.length > 0) {
+        fetchMenu(user.shopName);
         return setLoading(false);
       }
     } catch (e) {
-      setLoading(false);
-      return setMessage(e.message);
+      setMessage(e.message);
+      return setLoading(false);
     }
   };
 

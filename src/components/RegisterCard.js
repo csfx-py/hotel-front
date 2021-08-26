@@ -92,13 +92,16 @@ function RegisterCard() {
     >
       <Grid item>
         <Paper className={classes.paper} elevation={8}>
-          <form onSubmit={handleSubmit} className={classes.form}>
+          <form
+            onSubmit={handleSubmit}
+            autoComplete="off"
+            className={classes.form}
+          >
             <BsFillShieldLockFill color="#10b981" fontSize="2rem" />
             <Typography variant="h5" component="h2" align="center">
               Sign Up
             </Typography>
             <TextField
-              autoComplete="off"
               label="Username"
               name="name"
               value={credentials.name}
@@ -107,7 +110,6 @@ function RegisterCard() {
               onChange={handleChange}
             />
             <TextField
-              autoComplete="off"
               label="Shop Name"
               name="shopName"
               value={credentials.shopName}
@@ -116,7 +118,6 @@ function RegisterCard() {
               onChange={handleChange}
             />
             <TextField
-              autoComplete="off"
               label="Email"
               name="email"
               value={credentials.email}

@@ -42,25 +42,13 @@ function Menu() {
     useContext(DataContext);
 
   const [item, setItem] = useState({ itemPame: "", itemPrice: 0 });
-  const [rows, setRows] = useState(menu);
-
-  const getMenu = async () => {
-    setLoading(true);
-    try {
-      setRows(await fetchMenu());
-    } catch (e) {
-      console.log(e);
-    }
-    setLoading(false);
-  };
 
   useEffect(() => {
-    getMenu();
+    fetchMenu();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    setRows(menu);
-  }, [menu]);
+  useEffect(() => {}, [menu]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -74,6 +62,7 @@ function Menu() {
     event.preventDefault();
     setLoading(true);
     await addMenuItem(item);
+    setItem({ itemPame: "", itemPrice: 0 });
   };
 
   const handleDelete = async (item) => {
@@ -113,7 +102,6 @@ function Menu() {
               onChange={handleChange}
               value={item.price}
               margin="normal"
-              autoFocus
             />
           </Grid>
           <Grid item xs={3}>
@@ -128,7 +116,7 @@ function Menu() {
           </Grid>
         </Grid>
       </form>
-      <DataTable rows={rows} columns={columns} handleDelete={handleDelete} />
+      <DataTable rows={menu} columns={columns} handleDelete={handleDelete} />
     </div>
   );
 }
