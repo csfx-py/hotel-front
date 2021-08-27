@@ -10,6 +10,10 @@ export default function useSocket(shopName, tableID) {
     socketRef.current = socketIOClient(SOCKET_SERVER_URL, {
       query: { shopName, tableID },
     });
+
+    socketRef.current.on("booked", () => {
+      console.log("booked");
+    });
     return () => {
       socketRef.current.disconnect();
     };
@@ -17,8 +21,10 @@ export default function useSocket(shopName, tableID) {
   }, [shopName, tableID]);
 
   const sendData = (data) => {
-    socketRef.current.emit("pass", data);
-    console.log(data);
+    const test = socketRef.current.emit("pass", data, (error) => {
+      return error;
+    });
+    console.log(test);
   };
   return { sendData };
 }

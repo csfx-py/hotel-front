@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useSocket from "../hooks/useSocket";
 import { ClientContext } from "../contexts/ClientContext";
 import { AppBar, makeStyles, Tab, Tabs } from "@material-ui/core";
@@ -16,17 +16,12 @@ const useStyles = makeStyles((theme) => ({
 
 function Client() {
   const { shopName, tableID } = useParams();
-  const { checkHotel } = useContext(ClientContext);
-  const history = useHistory();
-
-  const getHotel = async () => {
-    if (!(await checkHotel(shopName))) return history.push("/404");
-  };
+  const { setConn } = useContext(ClientContext);
 
   useEffect(() => {
-    getHotel();
+    setConn({ shopName, tableID });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [shopName, tableID]);
 
   const classes = useStyles();
 
@@ -51,10 +46,10 @@ function Client() {
         <Menu />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Cart />
+        <Cart shopName={shopName} tableID={tableID} sendData={sendData} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Orders />
+        <Orders shopName={shopName} tableID={tableID} />
       </TabPanel>
     </div>
   );

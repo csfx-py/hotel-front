@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core";
+import { Button, makeStyles, Typography } from "@material-ui/core";
 import DataTable from "../../components/DataTable";
 import { AuthContext } from "../..//contexts/AuthContext";
 import { ClientContext } from "../..//contexts/ClientContext";
@@ -38,12 +38,12 @@ const columns = [
   },
 ];
 
-function Cart() {
+function Cart({ shopName, tableID, sendData }) {
   const classes = useStyles();
 
   const { setLoading } = useContext(AuthContext);
 
-  const { cart, setCart } = useContext(ClientContext);
+  const { cart, setCart, checkOut } = useContext(ClientContext);
 
   const [rows, setRows] = useState(cart);
 
@@ -61,6 +61,22 @@ function Cart() {
   return (
     <div className={classes.root}>
       <DataTable rows={rows} columns={columns} handleDelete={handleDelete} />
+      <Typography variant="h6" gutterBottom color="primary">
+        Total: {cart.reduce((acc, item) => acc + item.total, 0)}
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => {
+          // setLoading(true);
+          // checkOut({ shopName, tableID });
+          // setCart([]);
+          // setLoading(false);
+          sendData('lmao kek');
+        }}
+      >
+        Order
+      </Button>
     </div>
   );
 }
