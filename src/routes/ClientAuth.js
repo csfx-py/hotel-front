@@ -8,8 +8,8 @@ import {
 } from "@material-ui/core";
 import { BsFillShieldLockFill } from "react-icons/bs";
 import { useContext, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { ClientContext } from "../../contexts/ClientContext";
+import { Link, useHistory, useParams } from "react-router-dom";
+import { ClientContext } from "../contexts/ClientContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,32 +34,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ClientLogin() {
+function ClientAuth() {
   const classes = useStyles();
+  const { shopName, tableID } = useParams();
 
-  const history = useHistory();
+  const { checkTable } = useContext(ClientContext);
 
-  const { login, status } = useContext(ClientContext);
-
-  const [credentials, setCredentials] = useState({
-    name: "",
-    password: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCredentials({ ...credentials, [name]: value });
-  };
+  const [pass, setPass] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, password } = credentials;
-    if (name && password) {
+    if (pass) {
       try {
-        const res = await login({ name, password });
-        setCredentials({ name: "", password: "" });
-        if (res)
-          history.push(`/hotel/${status.hotelID}/${status.tableID}/authorized`);
+        const res = await checkTable(shopName, tableID, pass);
+        setPass("");
       } catch (err) {
         console.error(err);
       }
@@ -78,24 +66,18 @@ function ClientLogin() {
           <form onSubmit={handleSubmit} className={classes.form}>
             <BsFillShieldLockFill color="#10b981" fontSize="2rem" />
             <Typography variant="h5" component="h2" align="center">
-              Sign In
+              Table in use, please login
             </Typography>
-            <TextField
-              label="Username"
-              name="name"
-              value={credentials.name}
-              fullWidth
-              required
-              onChange={handleChange}
-            />
             <TextField
               label="Password"
               name="password"
-              value={credentials.password}
+              value={pass}
               type="password"
               fullWidth
               required
-              onChange={handleChange}
+              onChange={(e) => {
+                setPass(e.target.value);
+              }}
             />
             <Button
               type="submit"
@@ -107,18 +89,10 @@ function ClientLogin() {
               Sign in
             </Button>
           </form>
-          <Typography>
-            Don't have an account?{" "}
-            <Link to="/register">
-              <Typography color="primary" component="span">
-                Sign up here
-              </Typography>
-            </Link>
-          </Typography>
         </Paper>
       </Grid>
     </Grid>
   );
 }
 
-export default ClientLogin;
+export default ClientAuth;

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import useSocket from "../hooks/useSocket";
 import { ClientContext } from "../contexts/ClientContext";
@@ -17,11 +17,6 @@ const useStyles = makeStyles((theme) => ({
 function Client() {
   const { shopName, tableID } = useParams();
   const { setConn } = useContext(ClientContext);
-
-  useEffect(() => {
-    setConn({ shopName, tableID });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shopName, tableID]);
 
   const classes = useStyles();
 

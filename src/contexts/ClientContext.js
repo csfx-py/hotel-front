@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
 import { withRouter } from "react-router-dom";
@@ -13,7 +13,7 @@ const ClientProviderFn = ({ children, history }) => {
     withCredentials: true,
   });
 
-  const [conn, setConn] = useState({});
+  const [conn, setConn] = useState(false);
   const [menu, setMenu] = useState([]);
   const [cart, setCart] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -35,40 +35,31 @@ const ClientProviderFn = ({ children, history }) => {
     }
   };
 
-  const checkHotel = async () => {
+  const checkTable = async ({ shopName, tableID, pass }) => {
     setMessage("");
     setLoading(true);
-    console.log(conn.shopName);
     try {
-      const response = await api.get("/hotel", {
-        params: { shopName: conn.shopName },
+      const response = await api.post("/hotel", {
+        shopName,
+        tableID,
+        pass,
       });
       setLoading(false);
 
       if (response.status === 200 && response.data) {
-        setMessage(`Welcome to ${response.data}`);
-        fetchMenu();
+        setMessage(`Welcome to ${shopName}`);
+        history.push(`/hotel/${shopName}/${tableID}`);
         return true;
       }
-      history.push("/");
       return false;
     } catch (error) {
       setLoading(false);
-      setMessage("hotel not found");
-      history.push("/");
+      // setMessage("hotel not found");
+      // history.push("/");
+      console.log(error.response);
       return false;
     }
   };
-
-  const firstRef = useRef(true);
-  useEffect(() => {
-    if (firstRef.current) {
-      firstRef.current = false;
-      return;
-    }
-    checkHotel();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conn]);
 
   const checkOut = async () => {
     setMessage("");
@@ -100,8 +91,7 @@ const ClientProviderFn = ({ children, history }) => {
     <ClientContext.Provider
       value={{
         conn,
-        setConn,
-        checkHotel,
+        checkTable,
         menu,
         cart,
         setCart,

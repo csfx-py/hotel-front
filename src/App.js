@@ -8,6 +8,7 @@ import RegisterCard from "./components/RegisterCard";
 import Manager from "./routes/Manager";
 import Loading from "./views/Loading";
 import Client from "./routes/Client";
+import ClientAuth from "./routes/ClientAuth";
 import { ClientProvider } from "./contexts/ClientContext";
 import { makeStyles } from "@material-ui/core";
 
@@ -35,11 +36,11 @@ function App() {
                   <Manager />
                 </Route>
               )}
+              <Route
+                path="/hotel/:shopName/:tableID/auth"
+                component={ClientAuth}
+              />
               <Route path="/hotel/:shopName/:tableID" component={Client} />
-              {/* <Route
-                path="/hotel/:shopName:tableID/authorized"
-                component={Client}
-              /> */}
               <Route path="*" component={Home} />
             </Switch>
           </ClientProvider>
