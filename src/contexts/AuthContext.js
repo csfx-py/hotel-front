@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
       setMessage(res.data);
       return false;
     } catch (e) {
-      setMessage(e.message);
+      setMessage(e.response.data);
       return false;
     }
   };
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
       setMessage(res.data);
       return false;
     } catch (e) {
-      setMessage(e.message);
+      setMessage(e.response.data);
       return false;
     }
   };

@@ -6,11 +6,15 @@ import { withRouter } from "react-router-dom";
 export const ClientContext = createContext();
 
 const ClientProviderFn = ({ children, history }) => {
-  const { setMessage, setLoading } = useContext(AuthContext);
+  const { setMessage, setLoading, user } = useContext(AuthContext);
 
   const api = axios.create({
     baseURL: `http://localhost:5000/client`,
     withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+      auth: user.token ? user.token : "",
+    },
   });
 
   const [conn, setConn] = useState(false);
@@ -18,12 +22,12 @@ const ClientProviderFn = ({ children, history }) => {
   const [cart, setCart] = useState([]);
   const [orders, setOrders] = useState([]);
 
-  const fetchMenu = async () => {
+  const fetchMenu = async (shopName) => {
     setMessage("");
     setLoading(true);
     try {
       const response = await api.get("/menu", {
-        params: { shopName: conn.shopName },
+        params: { shopName },
       });
       setLoading(false);
       if (response.status === 200 && response.data.length > 0)
@@ -35,7 +39,7 @@ const ClientProviderFn = ({ children, history }) => {
     }
   };
 
-  const checkTable = async ({ shopName, tableID, pass }) => {
+  const checkTable = async (shopName, tableID, pass) => {
     setMessage("");
     setLoading(true);
     try {
@@ -47,6 +51,7 @@ const ClientProviderFn = ({ children, history }) => {
       setLoading(false);
 
       if (response.status === 200 && response.data) {
+        setConn(true);
         setMessage(`Welcome to ${shopName}`);
         history.push(`/hotel/${shopName}/${tableID}`);
         return true;
@@ -54,9 +59,8 @@ const ClientProviderFn = ({ children, history }) => {
       return false;
     } catch (error) {
       setLoading(false);
-      // setMessage("hotel not found");
-      // history.push("/");
-      console.log(error.response);
+      setMessage(error.response.data);
+      if (error.response.status === 404) history.push("/");
       return false;
     }
   };
@@ -91,12 +95,14 @@ const ClientProviderFn = ({ children, history }) => {
     <ClientContext.Provider
       value={{
         conn,
+        fetchMenu,
         checkTable,
         menu,
         cart,
         setCart,
         checkOut,
         orders,
+        setOrders,
         redirect,
       }}
     >

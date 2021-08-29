@@ -14,6 +14,8 @@ export const DataProvider = ({ children }) => {
   });
 
   const [menu, setMenu] = useState([]);
+  const [tables, setTables] = useState([]);
+  const [tempOrders, setTempOrders] = useState([]);
 
   const fetchMenu = async () => {
     setMessage("");
@@ -28,7 +30,7 @@ export const DataProvider = ({ children }) => {
       }
       return setMessage(res.data);
     } catch (e) {
-      return console.log(e.message);
+      return setMessage(e.response.data);
     }
   };
 
@@ -45,7 +47,7 @@ export const DataProvider = ({ children }) => {
         return setLoading(false);
       }
     } catch (e) {
-      setMessage(e.message);
+      setMessage(e.response.data);
       return setLoading(false);
     }
   };
@@ -64,14 +66,23 @@ export const DataProvider = ({ children }) => {
         return setLoading(false);
       }
     } catch (e) {
-      setMessage(e.message);
+      setMessage(e.response.data);
       return setLoading(false);
     }
   };
 
   return (
     <DataContext.Provider
-      value={{ menu, fetchMenu, addMenuItem, deleteMenuItem }}
+      value={{
+        menu,
+        fetchMenu,
+        addMenuItem,
+        deleteMenuItem,
+        tables,
+        setTables,
+        tempOrders,
+        setTempOrders,
+      }}
     >
       {children}
     </DataContext.Provider>

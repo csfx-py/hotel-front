@@ -66,7 +66,7 @@ function ClientAuth() {
           <form onSubmit={handleSubmit} className={classes.form}>
             <BsFillShieldLockFill color="#10b981" fontSize="2rem" />
             <Typography variant="h5" component="h2" align="center">
-              Table in use, please login
+              Join Session
             </Typography>
             <TextField
               label="Password"
@@ -86,7 +86,7 @@ function ClientAuth() {
               className={classes.btn}
               fullWidth
             >
-              Sign in
+              Submit
             </Button>
           </form>
         </Paper>

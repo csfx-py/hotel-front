@@ -38,19 +38,18 @@ const columns = [
   },
 ];
 
-function Cart({ shopName, tableID, sendData }) {
+function Cart({ shopName, tableID, sendCart }) {
   const classes = useStyles();
 
   const { setLoading } = useContext(AuthContext);
 
-  const { cart, setCart, checkOut } = useContext(ClientContext);
+  const { cart, setCart } = useContext(ClientContext);
 
   const [rows, setRows] = useState(cart);
 
   const handleDelete = async (item) => {
     setLoading(true);
     await setCart(cart.filter((i) => i.name !== item.name));
-    console.log(cart);
     setLoading(false);
   };
 
@@ -67,12 +66,11 @@ function Cart({ shopName, tableID, sendData }) {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => {
-          // setLoading(true);
-          // checkOut({ shopName, tableID });
-          // setCart([]);
-          // setLoading(false);
-          sendData('lmao kek');
+        onClick={async () => {
+          setLoading(true);
+          sendCart(rows);
+          setCart([]);
+          setLoading(false);
         }}
       >
         Order

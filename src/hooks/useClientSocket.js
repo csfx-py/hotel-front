@@ -3,28 +3,22 @@ import socketIOClient from "socket.io-client";
 
 const SOCKET_SERVER_URL = "http://localhost:5000";
 
-export default function useSocket(shopName, tableID) {
+export default function useClientSocket(shopName, tableID) {
   const socketRef = useRef();
 
   useEffect(() => {
     socketRef.current = socketIOClient(SOCKET_SERVER_URL, {
-      query: { shopName, tableID },
+      query: { role: "client", shopName, tableID },
     });
-
-    socketRef.current.on("booked", () => {
-      console.log("booked");
-    });
+    
     return () => {
       socketRef.current.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shopName, tableID]);
 
-  const sendData = (data) => {
-    const test = socketRef.current.emit("pass", data, (error) => {
-      return error;
-    });
-    console.log(test);
+  const sendCart = (data) => {
+    socketRef.current.emit("clientOrder", data, tableID);
   };
-  return { sendData };
+  return { sendCart };
 }

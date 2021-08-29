@@ -11,9 +11,13 @@ import {
 } from "@material-ui/core";
 import TabPanel from "../components/TabPanel";
 import Menu from "../views/Manager/Menu";
+import Orders from "../views/Manager/Orders";
 import { Link } from "react-router-dom";
 import logo from "../images/logo.png";
 import { AuthContext } from "../contexts/AuthContext";
+import useManagerSocket from "../hooks/useManagerSocket";
+import { DataContext } from "../contexts/DataContext";
+import NewOrders from "../views/Manager/NewOrders";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,9 +34,20 @@ const useStyles = makeStyles((theme) => ({
 function Manager() {
   const classes = useStyles();
 
-  const { setLoading, logout } = useContext(AuthContext);
+  const { user, setMessage, setLoading, logout } = useContext(AuthContext);
+  const { tables, setTables, tempOrders, setTempOrders } =
+    useContext(DataContext);
 
   const [value, setValue] = useState(0);
+
+  const managerSocket = useManagerSocket(
+    user.shopName,
+    setMessage,
+    tables,
+    setTables,
+    tempOrders,
+    setTempOrders
+  );
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -63,15 +78,21 @@ function Manager() {
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange}>
           <Tab label="Orders" />
+          <Tab label="Tables Summary" />
           <Tab label="Menu" />
           <Tab label="Settings" />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0}></TabPanel>
+      <TabPanel value={value} index={0}>
+        <Orders />
+      </TabPanel>
       <TabPanel value={value} index={1}>
+        <NewOrders />
+      </TabPanel>
+      <TabPanel value={value} index={2}>
         <Menu setLoading={setLoading} />
       </TabPanel>
-      <TabPanel value={value} index={2}></TabPanel>
+      <TabPanel value={value} index={3}></TabPanel>
     </div>
   );
 }
