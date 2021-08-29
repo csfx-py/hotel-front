@@ -31,7 +31,6 @@ const ClientProviderFn = ({ children, history }) => {
       setLoading(false);
       if (response.status === 200 && response.data.length > 0)
         return setMenu(response.data);
-      return toast(response.data);
     } catch (error) {
       setLoading(false);
       toast(error.response.data, "error");

@@ -40,10 +40,9 @@ function Manager() {
 
   const [value, setValue] = useState(0);
 
-  const { removeItem } = useManagerSocket(
+  const { removeItem, removeConn } = useManagerSocket(
     user.shopName,
     toast,
-    tables,
     setTables,
     tempOrders,
     setTempOrders
@@ -84,7 +83,7 @@ function Manager() {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Orders removeItem={removeItem} />
+        <Orders removeItem={removeItem} removeConn={removeConn} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <NewOrders />

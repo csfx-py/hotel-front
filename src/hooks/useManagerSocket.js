@@ -6,7 +6,6 @@ const SOCKET_SERVER_URL = "http://localhost:5000";
 export default function useManagerSocket(
   shopName,
   toast,
-  tables,
   setTables,
   tempOrders,
   setTempOrders
@@ -27,19 +26,16 @@ export default function useManagerSocket(
     });
 
     socketRef.current.on("managerNewOrder", (data, client) => {
-      data.map((datum) => {
-        datum.id = Math.floor(Math.random() * Date.now());
+      data = data.map((datum) => {
         datum.client = client;
         return datum;
       });
-      console.log(tempOrders);
       setTempOrders([...tempOrders, ...data]);
       toast("New orders available", "info");
     });
 
     return () => {
       socketRef.current.disconnect();
-      setTempOrders([]);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shopName]);
@@ -48,5 +44,9 @@ export default function useManagerSocket(
     socketRef.current.emit("removeItem", data, tableID);
   };
 
-  return { removeItem };
+  const removeConn = (tableID) => {
+    socketRef.current.emit("removeConn", tableID);
+  };
+
+  return { removeItem, removeConn };
 }

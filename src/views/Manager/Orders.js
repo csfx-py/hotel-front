@@ -1,13 +1,15 @@
 import {
+  Button,
   FormControl,
   InputLabel,
   makeStyles,
   MenuItem,
   Select,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { useContext, useEffect, useState } from "react";
 import DataTable from "../../components/DataTable";
+import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
 
 const useStyles = makeStyles((theme) => ({
@@ -51,24 +53,21 @@ const columns = [
   },
 ];
 
-function Orders({ removeItem }) {
+function Orders({ removeItem, removeConn }) {
   const classes = useStyles();
 
-  const { tables, tempOrders } = useContext(DataContext);
+  const { setLoading } = useContext(AuthContext);
+  const { tables, tempOrders, saveOrder } = useContext(DataContext);
+  const [rows, setRows] = useState([]);
   useEffect(() => {
-    const table = tables.find((t) => t.tableID === tableName);
-    if (table) {
-      setRows(table.items);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tables, tempOrders]);
 
   const [tableName, setTableName] = useState("");
-  const [rows, setRows] = useState([]);
 
   const handleDelete = (row) => {
-    setRows(rows.filter((r) => r.id !== row.id));
     removeItem(row, tableName);
+    setRows(rows.filter((r) => r.id !== row.id));
   };
 
   return (
@@ -96,6 +95,24 @@ function Orders({ removeItem }) {
       <Typography variant="h6" gutterBottom color="secondary">
         Total: {rows.reduce((acc, cur) => acc + cur.total, 0)}
       </Typography>
+      {rows.length > 0 && (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={async (e) => {
+            setLoading(true);
+            await saveOrder(
+              tableName,
+              rows,
+              rows.reduce((acc, cur) => acc + cur.total, 0)
+            );
+            removeConn(tableName);
+            setLoading(false);
+          }}
+        >
+          Save Order
+        </Button>
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
-import { useContext, useState } from "react";
-import { makeStyles } from "@material-ui/core";
+import { useContext, useEffect, useState } from "react";
+import { makeStyles, Typography } from "@material-ui/core";
 import DataTable from "../../components/DataTable";
+import { ClientContext } from "../..//contexts/ClientContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,11 +30,19 @@ const columns = [
 function Orders() {
   const classes = useStyles();
 
+  const { orders } = useContext(ClientContext);
   const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    setRows(orders);
+  }, [orders]);
 
   return (
     <div className={classes.root}>
       <DataTable rows={rows} columns={columns} />
+      <Typography variant="h6" gutterBottom color="secondary">
+        Total: {orders.reduce((acc, curr) => acc + curr.total, 0)}
+      </Typography>
     </div>
   );
 }

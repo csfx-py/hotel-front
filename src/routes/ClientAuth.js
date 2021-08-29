@@ -47,7 +47,7 @@ function ClientAuth() {
     if (pass) {
       try {
         const res = await checkTable(shopName, tableID, pass);
-        setPass("");
+        if (!res) setPass("");
       } catch (err) {
         console.error(err);
       }

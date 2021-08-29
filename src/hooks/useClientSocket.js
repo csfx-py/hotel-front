@@ -3,7 +3,12 @@ import socketIOClient from "socket.io-client";
 
 const SOCKET_SERVER_URL = "http://localhost:5000";
 
-export default function useClientSocket(shopName, tableID, orders, setOrders) {
+export default function useClientSocket(
+  shopName,
+  tableID,
+  orders,
+  setOrders,
+) {
   const socketRef = useRef();
 
   useEffect(() => {
@@ -13,6 +18,11 @@ export default function useClientSocket(shopName, tableID, orders, setOrders) {
 
     socketRef.current.on("orders", (items) => {
       setOrders([...orders, ...items]);
+    });
+
+    socketRef.current.on("complete", () => {
+      socketRef.current.close();
+      window.location.href = "/";
     });
 
     return () => {

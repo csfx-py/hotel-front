@@ -27,7 +27,6 @@ export const DataProvider = ({ children }) => {
       if (res.status === 200 && res.data.length > 0) {
         return setMenu(res.data);
       }
-      return toast(res.data);
     } catch (e) {
       return toast(e.response.data, "error");
     }
@@ -72,6 +71,32 @@ export const DataProvider = ({ children }) => {
     }
   };
 
+  const saveOrder = async (tableID, orders, total) => {
+    orders = orders.map((order) => {
+      return {
+        name: order.name,
+        qty: order.qty,
+      };
+    });
+
+    try {
+      const res = await api.put("/order", {
+        orders,
+        shopName: user.shopName,
+        tableID,
+        total,
+      });
+      if (res.status === 200 && res.data.length > 0) {
+        toast("Saved", "success");
+        return setLoading(false);
+      }
+      return toast(res.data);
+    } catch (e) {
+      toast(e.response.data, "error");
+      return setLoading(false);
+    }
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -83,6 +108,7 @@ export const DataProvider = ({ children }) => {
         setTables,
         tempOrders,
         setTempOrders,
+        saveOrder,
       }}
     >
       {children}

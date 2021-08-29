@@ -47,7 +47,7 @@ function NewOrders() {
   const classes = useStyles();
 
   const [rows, setRows] = useState([]);
-  const { tempOrders } = useContext(DataContext);
+  const { tempOrders, setTempOrders } = useContext(DataContext);
 
   useEffect(() => {
     setRows([...rows, ...tempOrders]);
