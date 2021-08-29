@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 export const ClientContext = createContext();
 
 const ClientProviderFn = ({ children, history }) => {
-  const { setMessage, setLoading, user } = useContext(AuthContext);
+  const { toast, setLoading, user } = useContext(AuthContext);
 
   const api = axios.create({
     baseURL: `http://localhost:5000/client`,
@@ -23,7 +23,6 @@ const ClientProviderFn = ({ children, history }) => {
   const [orders, setOrders] = useState([]);
 
   const fetchMenu = async (shopName) => {
-    setMessage("");
     setLoading(true);
     try {
       const response = await api.get("/menu", {
@@ -32,15 +31,14 @@ const ClientProviderFn = ({ children, history }) => {
       setLoading(false);
       if (response.status === 200 && response.data.length > 0)
         return setMenu(response.data);
-      return setMessage(response.data);
+      return toast(response.data);
     } catch (error) {
       setLoading(false);
-      setMessage(error.message);
+      toast(error.response.data, "error");
     }
   };
 
   const checkTable = async (shopName, tableID, pass) => {
-    setMessage("");
     setLoading(true);
     try {
       const response = await api.post("/hotel", {
@@ -52,21 +50,20 @@ const ClientProviderFn = ({ children, history }) => {
 
       if (response.status === 200 && response.data) {
         setConn(true);
-        setMessage(`Welcome to ${shopName}`);
+        toast(`Welcome to ${shopName}`);
         history.push(`/hotel/${shopName}/${tableID}`);
         return true;
       }
       return false;
     } catch (error) {
       setLoading(false);
-      setMessage(error.response.data);
+      toast(error.response.data, "error");
       if (error.response.status === 404) history.push("/");
       return false;
     }
   };
 
   const checkOut = async () => {
-    setMessage("");
     setLoading(true);
     try {
       const response = await api.post("/checkout", {
@@ -76,13 +73,13 @@ const ClientProviderFn = ({ children, history }) => {
       });
       setLoading(false);
       if (response.status === 200) {
-        setMessage(response.data);
+        toast(response.data, "success");
         return true;
       }
       return false;
     } catch (error) {
       setLoading(false);
-      setMessage(error.message);
+      toast(error.response.data, "error");
       return false;
     }
   };

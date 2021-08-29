@@ -11,6 +11,12 @@ const useStyles = makeStyles((theme) => ({
 
 const columns = [
   {
+    id: "client",
+    label: "Table",
+    minWidth: 100,
+    align: "center",
+  },
+  {
     id: "name",
     label: "Item Name",
     minWidth: 150,
@@ -41,14 +47,20 @@ function NewOrders() {
   const classes = useStyles();
 
   const [rows, setRows] = useState([]);
-  const { orders } = useContext(DataContext);
+  const { tempOrders } = useContext(DataContext);
+
   useEffect(() => {
-    setRows(orders);
-  }, [orders]);
+    setRows([...rows, ...tempOrders]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tempOrders]);
+
+  const handleDelete = (row) => {
+    setRows(rows.filter((r) => r.id !== row.id));
+  };
 
   return (
     <div className={classes.root}>
-      {/* <DataTable rows={rows} columns={columns} /> */}
+      <DataTable rows={rows} columns={columns} handleDelete={handleDelete} />
     </div>
   );
 }

@@ -31,14 +31,13 @@ const columns = [
 function Menu() {
   const classes = useStyles();
 
-  const { setLoading, setMessage } = useContext(AuthContext);
+  const { toast } = useContext(AuthContext);
 
   const { menu, cart, setCart } = useContext(ClientContext);
 
   const [rows, setRows] = useState([]);
 
   const handleAdd = async (row) => {
-    await setMessage("");
     const itemList = cart.filter((item) => item.name === row.name);
     if (itemList.length > 0) {
       const cartCopy = [...cart];
@@ -46,13 +45,19 @@ function Menu() {
       item.qty += 1;
       item.total = item.qty * item.price;
       setCart(cartCopy);
-      return setMessage(`${row.name} added to cart`);
+      return toast(`${row.name} added to cart`, "success");
     }
     setCart([
       ...cart,
-      { name: row.name, price: row.price, qty: 1, total: row.price },
+      {
+        name: row.name,
+        price: row.price,
+        qty: 1,
+        total: row.price,
+        id: Math.random() * Date.now(),
+      },
     ]);
-    setMessage(`${row.name} added to cart`);
+    toast(`${row.name} added to cart`, "success");
   };
 
   useEffect(() => {

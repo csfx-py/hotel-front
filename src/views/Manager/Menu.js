@@ -41,7 +41,7 @@ function Menu() {
   const { menu, fetchMenu, addMenuItem, deleteMenuItem } =
     useContext(DataContext);
 
-  const [item, setItem] = useState({ itemPame: "", itemPrice: 0 });
+  const [item, setItem] = useState({ itemName: "", itemPrice: 0 });
 
   useEffect(() => {
     fetchMenu();
@@ -62,12 +62,12 @@ function Menu() {
     event.preventDefault();
     setLoading(true);
     await addMenuItem(item);
-    setItem({ itemPame: "", itemPrice: 0 });
+    setItem({ itemName: "", itemPrice: 0 });
   };
 
   const handleDelete = async (item) => {
     setLoading(true);
-    await deleteMenuItem(item);
+    await deleteMenuItem(item.name);
   };
 
   return (
@@ -88,7 +88,7 @@ function Menu() {
               label="Item Name"
               fullWidth
               onChange={handleChange}
-              value={item.name}
+              value={item.itemName}
               margin="normal"
               autoFocus
             />
@@ -100,7 +100,7 @@ function Menu() {
               type="number"
               fullWidth
               onChange={handleChange}
-              value={item.price}
+              value={item.itemPrice}
               margin="normal"
             />
           </Grid>

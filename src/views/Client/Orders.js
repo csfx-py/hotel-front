@@ -1,8 +1,6 @@
 import { useContext, useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import DataTable from "../../components/DataTable";
-import { AuthContext } from "../..//contexts/AuthContext";
-import { ClientContext } from "../..//contexts/ClientContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,10 +28,6 @@ const columns = [
 
 function Orders() {
   const classes = useStyles();
-
-  const { setLoading, setMessage } = useContext(AuthContext);
-
-  const { menu } = useContext(ClientContext);
 
   const [rows, setRows] = useState([]);
 

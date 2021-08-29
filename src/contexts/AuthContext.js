@@ -1,4 +1,4 @@
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import Cookie from "js-cookie";
@@ -11,17 +11,12 @@ export const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const firstUpdate = useRef(true);
 
-  useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-    if (message !== "") enqueueSnackbar(message);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [message]);
+  const toast = (message, variant = "default") => {
+    enqueueSnackbar(message, {
+      variant,
+    });
+  };
 
   const api = axios.create({
     baseURL: `http://localhost:5000/auth`,
@@ -30,7 +25,6 @@ export const AuthProvider = ({ children }) => {
   });
 
   const register = async ({ name, email, password, shopName }) => {
-    setMessage("");
     try {
       const res = await api.post("/register", {
         name,
@@ -44,16 +38,15 @@ export const AuthProvider = ({ children }) => {
         Cookie.set("Authid", res.data);
         return true;
       }
-      setMessage(res.data);
+      toast(res.data);
       return false;
     } catch (e) {
-      setMessage(e.response.data);
+      toast(e.response.data, "error");
       return false;
     }
   };
 
   const login = async ({ name, password }) => {
-    setMessage("");
     try {
       const res = await api.post("/login", { name, password });
       if (res.status === 200 && res.data) {
@@ -62,10 +55,10 @@ export const AuthProvider = ({ children }) => {
         Cookie.set("Authid", res.data);
         return true;
       }
-      setMessage(res.data);
+      toast(res.data);
       return false;
     } catch (e) {
-      setMessage(e.response.data);
+      toast(e.response.data, "error");
       return false;
     }
   };
@@ -84,15 +77,16 @@ export const AuthProvider = ({ children }) => {
       if (Date.now() >= exp * 1000) {
         setUser({});
         Cookie.remove("Authid");
-        return setMessage("Session expired");
+        return toast("Session expired", "error");
       }
       return setUser({ name, shopName, token: cookie });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <AuthContext.Provider
-      value={{ user, register, login, logout, setMessage, loading, setLoading }}
+      value={{ user, register, login, logout, toast, loading, setLoading }}
     >
       {children}
     </AuthContext.Provider>

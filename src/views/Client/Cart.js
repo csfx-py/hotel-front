@@ -49,7 +49,7 @@ function Cart({ shopName, tableID, sendCart }) {
 
   const handleDelete = async (item) => {
     setLoading(true);
-    await setCart(cart.filter((i) => i.name !== item.name));
+    await setCart(cart.filter((i) => i.id !== item.id));
     setLoading(false);
   };
 
@@ -66,7 +66,7 @@ function Cart({ shopName, tableID, sendCart }) {
       <Button
         variant="contained"
         color="primary"
-        onClick={async () => {
+        onClick={async (e) => {
           setLoading(true);
           sendCart(rows);
           setCart([]);

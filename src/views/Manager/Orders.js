@@ -4,6 +4,7 @@ import {
   makeStyles,
   MenuItem,
   Select,
+  Typography
 } from "@material-ui/core";
 import { useContext, useEffect, useState } from "react";
 import DataTable from "../../components/DataTable";
@@ -50,14 +51,25 @@ const columns = [
   },
 ];
 
-function Orders() {
+function Orders({ removeItem }) {
   const classes = useStyles();
 
-  const { tables } = useContext(DataContext);
-  useEffect(() => {}, [tables]);
+  const { tables, tempOrders } = useContext(DataContext);
+  useEffect(() => {
+    const table = tables.find((t) => t.tableID === tableName);
+    if (table) {
+      setRows(table.items);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tables, tempOrders]);
 
   const [tableName, setTableName] = useState("");
   const [rows, setRows] = useState([]);
+
+  const handleDelete = (row) => {
+    setRows(rows.filter((r) => r.id !== row.id));
+    removeItem(row, tableName);
+  };
 
   return (
     <div className={classes.root}>
@@ -69,10 +81,8 @@ function Orders() {
           value={tableName}
           onChange={(e) => {
             setTableName(e.target.value);
-            const index = tables.findIndex(
-              (table) => table.tableID === e.target.value
-            );
-            setRows(tables[index].items);
+            const table = tables.find((t) => t.tableID === e.target.value);
+            setRows(table.items);
           }}
         >
           {tables.map((table) => (
@@ -82,7 +92,10 @@ function Orders() {
           ))}
         </Select>
       </FormControl>
-      <DataTable rows={rows} columns={columns} />
+      <DataTable rows={rows} columns={columns} handleDelete={handleDelete} />
+      <Typography variant="h6" gutterBottom color="secondary">
+        Total: {rows.reduce((acc, cur) => acc + cur.total, 0)}
+      </Typography>
     </div>
   );
 }

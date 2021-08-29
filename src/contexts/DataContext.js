@@ -5,7 +5,7 @@ import { AuthContext } from "./AuthContext";
 export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
-  const { user, setMessage, setLoading } = useContext(AuthContext);
+  const { user, toast, setLoading } = useContext(AuthContext);
 
   const api = axios.create({
     baseURL: `http://localhost:5000/hotel`,
@@ -18,7 +18,6 @@ export const DataProvider = ({ children }) => {
   const [tempOrders, setTempOrders] = useState([]);
 
   const fetchMenu = async () => {
-    setMessage("");
     try {
       const res = await api.get("/menu", {
         params: {
@@ -28,14 +27,13 @@ export const DataProvider = ({ children }) => {
       if (res.status === 200 && res.data.length > 0) {
         return setMenu(res.data);
       }
-      return setMessage(res.data);
+      return toast(res.data);
     } catch (e) {
-      return setMessage(e.response.data);
+      return toast(e.response.data, "error");
     }
   };
 
   const addMenuItem = async ({ itemName, itemPrice }) => {
-    setMessage("");
     try {
       const res = await api.put("/menu", {
         itemName,
@@ -44,16 +42,17 @@ export const DataProvider = ({ children }) => {
       });
       if (res.status === 200 && res.data.length > 0) {
         fetchMenu(user.shopName);
+        toast(`${itemName} added`, "success");
         return setLoading(false);
       }
+      return toast(res.data);
     } catch (e) {
-      setMessage(e.response.data);
+      toast(e.response.data, "error");
       return setLoading(false);
     }
   };
 
-  const deleteMenuItem = async ({ name }) => {
-    setMessage("");
+  const deleteMenuItem = async (name) => {
     try {
       const res = await api.delete("/menu", {
         params: {
@@ -63,10 +62,12 @@ export const DataProvider = ({ children }) => {
       });
       if (res.status === 200 && res.data.length > 0) {
         fetchMenu(user.shopName);
+        toast(`${name} removed`, "success");
         return setLoading(false);
       }
+      return toast(res.data);
     } catch (e) {
-      setMessage(e.response.data);
+      toast(e.response.data, "error");
       return setLoading(false);
     }
   };

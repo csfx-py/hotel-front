@@ -45,7 +45,7 @@ function RegisterCard() {
   const mailPattern =
     /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 
-  const { register, setMessage } = useContext(AuthContext);
+  const { register, toast } = useContext(AuthContext);
   const [credentials, setCredentials] = useState({
     name: "",
     email: "",
@@ -60,17 +60,17 @@ function RegisterCard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await setMessage("");
     const { name, email, password, shopName } = credentials;
     if (name && email && password && shopName) {
       if (!passPattern.test(password)) {
-        setMessage(
-          "Password must be at least 6 characters long and contain at least one lowercase letter, one uppercase letter, one number and one special character"
+        toast(
+          "Password must be at least 6 characters long and contain at least one lowercase letter, one uppercase letter, one number and one special character",
+          "error"
         );
         return;
       }
       if (!mailPattern.test(email)) {
-        setMessage("Invalid email address");
+        toast("Invalid email address", "error");
         return;
       }
       try {
@@ -78,7 +78,7 @@ function RegisterCard() {
         setCredentials({ name: "", email: "", password: "", shopName: "" });
         if (res) history.push("/hotel");
       } catch (err) {
-        setMessage(err);
+        toast(err.message, "error");
       }
     }
   };

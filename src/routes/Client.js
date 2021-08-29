@@ -17,11 +17,11 @@ const useStyles = makeStyles((theme) => ({
 function Client() {
   const { shopName, tableID } = useParams();
   const history = useHistory();
-  const { conn, fetchMenu } = useContext(ClientContext);
+  const { conn, fetchMenu, orders, setOrders } = useContext(ClientContext);
 
   const classes = useStyles();
 
-  const { sendCart, fetchOrders } = useClientSocket(shopName, tableID);
+  const { sendCart } = useClientSocket(shopName, tableID, orders, setOrders);
 
   const [value, setValue] = useState(0);
 
@@ -51,7 +51,7 @@ function Client() {
         <Cart shopName={shopName} tableID={tableID} sendCart={sendCart} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Orders shopName={shopName} tableID={tableID} fetchOrders={fetchOrders} />
+        <Orders shopName={shopName} tableID={tableID} />
       </TabPanel>
     </div>
   );

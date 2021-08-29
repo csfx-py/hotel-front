@@ -76,7 +76,7 @@ function LoginCard() {
         <Paper className={classes.paper} elevation={8}>
           <form
             onSubmit={handleSubmit}
-            autocomplete="off"
+            autoComplete="off"
             className={classes.form}
           >
             <BsFillShieldLockFill color="#10b981" fontSize="2rem" />

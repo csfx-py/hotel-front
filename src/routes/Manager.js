@@ -34,15 +34,15 @@ const useStyles = makeStyles((theme) => ({
 function Manager() {
   const classes = useStyles();
 
-  const { user, setMessage, setLoading, logout } = useContext(AuthContext);
+  const { user, toast, setLoading, logout } = useContext(AuthContext);
   const { tables, setTables, tempOrders, setTempOrders } =
     useContext(DataContext);
 
   const [value, setValue] = useState(0);
 
-  const managerSocket = useManagerSocket(
+  const { removeItem } = useManagerSocket(
     user.shopName,
-    setMessage,
+    toast,
     tables,
     setTables,
     tempOrders,
@@ -77,14 +77,14 @@ function Manager() {
       </AppBar>
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange}>
-          <Tab label="Orders" />
           <Tab label="Tables Summary" />
+          <Tab label="Orders" />
           <Tab label="Menu" />
           <Tab label="Settings" />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Orders />
+        <Orders removeItem={removeItem} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <NewOrders />
