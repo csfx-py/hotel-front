@@ -4,6 +4,7 @@ import "./styles/index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { AuthProvider } from "./contexts/AuthContext";
+import { UtilityProvider } from "./contexts/UtilityContext";
 import { SnackbarProvider } from "notistack";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
@@ -34,9 +35,11 @@ ReactDOM.render(
           horizontal: "right",
         }}
       >
-        <AuthProvider>
-          <App />
-        </AuthProvider>
+        <UtilityProvider>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </UtilityProvider>
       </SnackbarProvider>
     </ThemeProvider>
   </React.StrictMode>,

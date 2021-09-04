@@ -64,7 +64,11 @@ function RegisterCard() {
     if (name && email && password && shopName) {
       if (!passPattern.test(password)) {
         toast(
-          "Password must be at least 6 characters long and contain at least one lowercase letter, one uppercase letter, one number and one special character",
+          `Password must be at least 6 characters long
+           and contain at least one lowercase letter, 
+           one uppercase letter, 
+           one number and 
+           one special character`,
           "error"
         );
         return;

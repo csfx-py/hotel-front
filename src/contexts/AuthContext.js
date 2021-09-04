@@ -1,22 +1,14 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import Cookie from "js-cookie";
-import { useSnackbar } from "notistack";
+import { UtilityContext } from "./UtilityContext";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const { enqueueSnackbar } = useSnackbar();
-
+  const { toast } = useContext(UtilityContext);
   const [user, setUser] = useState({});
-  const [loading, setLoading] = useState(false);
-
-  const toast = (message, variant = "default") => {
-    enqueueSnackbar(message, {
-      variant,
-    });
-  };
 
   const api = axios.create({
     baseURL: `http://localhost:5000/auth`,
@@ -69,24 +61,49 @@ export const AuthProvider = ({ children }) => {
     return true;
   };
 
-  useEffect(() => {
+  const changePassword = async ({ oldPassword, newPassword }) => {
+    try {
+      const res = await api.post("/changePassword", {
+        name: user.name,
+        oldPassword,
+        newPassword,
+      });
+      if (res.status === 200 && res.data) {
+        const { name, shopName } = jwt_decode(res.data);
+        setUser({ name, shopName, token: res.data });
+        Cookie.set("Authid", res.data);
+        toast("Password Changed successfully", "success");
+        return true;
+      }
+      toast(res.data);
+      return false;
+    } catch (e) {
+      toast(e.response.data, "error");
+      return false;
+    }
+  };
+
+  const checkCookie = async () => {
     const cookie = Cookie.get("Authid");
 
     if (cookie) {
-      const { name, shopName, exp } = jwt_decode(cookie);
+      const { name, shopName, exp } = await jwt_decode(cookie);
       if (Date.now() >= exp * 1000) {
         setUser({});
         Cookie.remove("Authid");
-        return toast("Session expired", "error");
+        toast("Session expired", "error");
+        return false;
       }
-      return setUser({ name, shopName, token: cookie });
+      setUser({ name, shopName, token: cookie });
+      return true;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setUser({});
+    return false;
+  };
 
   return (
     <AuthContext.Provider
-      value={{ user, register, login, logout, toast, loading, setLoading }}
+      value={{ user, checkCookie, register, login, logout, changePassword }}
     >
       {children}
     </AuthContext.Provider>

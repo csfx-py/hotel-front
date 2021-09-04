@@ -1,11 +1,13 @@
 import { createContext, useContext, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
+import { UtilityContext } from "./UtilityContext";
 
 export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
-  const { user, toast, setLoading } = useContext(AuthContext);
+  const { toast, setLoading } = useContext(UtilityContext);
+  const { user } = useContext(AuthContext);
 
   const api = axios.create({
     baseURL: `http://localhost:5000/hotel`,

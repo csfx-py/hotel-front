@@ -1,3 +1,6 @@
+import { useContext, useEffect, useState } from "react";
+import { UtilityContext } from "../../contexts/UtilityContext";
+import { DataContext } from "../../contexts/DataContext";
 import {
   Button,
   FormControl,
@@ -7,10 +10,7 @@ import {
   Select,
   Typography,
 } from "@material-ui/core";
-import { useContext, useEffect, useState } from "react";
 import DataTable from "../../components/DataTable";
-import { AuthContext } from "../../contexts/AuthContext";
-import { DataContext } from "../../contexts/DataContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,12 +56,12 @@ const columns = [
 function Orders({ removeItem, removeConn }) {
   const classes = useStyles();
 
-  const { setLoading } = useContext(AuthContext);
-  const { tables, tempOrders, saveOrder } = useContext(DataContext);
+  const { setIsLoading } = useContext(UtilityContext);
+  const { tables, saveOrder } = useContext(DataContext);
   const [rows, setRows] = useState([]);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tables, tempOrders]);
+  }, [tables]);
 
   const [tableName, setTableName] = useState("");
 
@@ -100,14 +100,14 @@ function Orders({ removeItem, removeConn }) {
           variant="contained"
           color="primary"
           onClick={async (e) => {
-            setLoading(true);
+            setIsLoading(true);
             await saveOrder(
               tableName,
               rows,
               rows.reduce((acc, cur) => acc + cur.total, 0)
             );
             removeConn(tableName);
-            setLoading(false);
+            setIsLoading(false);
           }}
         >
           Save Order

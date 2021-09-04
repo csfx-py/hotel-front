@@ -2,11 +2,13 @@ import { createContext, useContext, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
 import { withRouter } from "react-router-dom";
+import { UtilityContext } from "./UtilityContext";
 
 export const ClientContext = createContext();
 
 const ClientProviderFn = ({ children, history }) => {
-  const { toast, setLoading, user } = useContext(AuthContext);
+  const { toast, setLoading } = useContext(UtilityContext);
+  const { user } = useContext(AuthContext);
 
   const api = axios.create({
     baseURL: `http://localhost:5000/client`,

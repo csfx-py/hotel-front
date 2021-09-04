@@ -1,4 +1,6 @@
 import { useContext, useEffect, useState } from "react";
+import { UtilityContext } from "../../contexts/UtilityContext";
+import { DataContext } from "../..//contexts/DataContext";
 import {
   Button,
   Grid,
@@ -7,8 +9,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import DataTable from "../../components/DataTable";
-import { AuthContext } from "../..//contexts/AuthContext";
-import { DataContext } from "../..//contexts/DataContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,7 +37,7 @@ const columns = [
 function Menu() {
   const classes = useStyles();
 
-  const { setLoading } = useContext(AuthContext);
+  const { setIsLoading } = useContext(UtilityContext);
   const { menu, fetchMenu, addMenuItem, deleteMenuItem } =
     useContext(DataContext);
 
@@ -60,13 +60,13 @@ function Menu() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
+    setIsLoading(true);
     await addMenuItem(item);
     setItem({ itemName: "", itemPrice: 0 });
   };
 
   const handleDelete = async (item) => {
-    setLoading(true);
+    setIsLoading(true);
     await deleteMenuItem(item.name);
   };
 

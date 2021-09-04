@@ -1,4 +1,9 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { UtilityContext } from "../contexts/UtilityContext";
+import { AuthContext } from "../contexts/AuthContext";
+import { DataContext } from "../contexts/DataContext";
+import useManagerSocket from "../hooks/useManagerSocket";
 import {
   AppBar,
   Button,
@@ -10,14 +15,11 @@ import {
   Typography,
 } from "@material-ui/core";
 import TabPanel from "../components/TabPanel";
-import Menu from "../views/Manager/Menu";
 import Orders from "../views/Manager/Orders";
-import { Link } from "react-router-dom";
-import logo from "../images/logo.png";
-import { AuthContext } from "../contexts/AuthContext";
-import useManagerSocket from "../hooks/useManagerSocket";
-import { DataContext } from "../contexts/DataContext";
 import NewOrders from "../views/Manager/NewOrders";
+import Menu from "../views/Manager/Menu";
+import logo from "../images/logo.png";
+import Settings from "../views/Manager/Settings";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,12 +36,31 @@ const useStyles = makeStyles((theme) => ({
 function Manager() {
   const classes = useStyles();
 
-  const { user, toast, setLoading, logout } = useContext(AuthContext);
-  const { tables, setTables, tempOrders, setTempOrders } =
-    useContext(DataContext);
+  const { toast, setIsLoading } = useContext(UtilityContext);
+  const { user, checkCookie, logout } = useContext(AuthContext);
+  const history = useHistory();
+
+  const checkUser = async () => {
+    const isLoggedIn = await checkCookie();
+    if (!isLoggedIn) {
+      history.push("/login");
+    }
+  };
+
+  useEffect(() => {
+    checkUser();
+    return () => {
+      logout();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [value, setValue] = useState(0);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
+  const { setTables, tempOrders, setTempOrders } = useContext(DataContext);
   const { removeItem, removeConn } = useManagerSocket(
     user.shopName,
     toast,
@@ -47,10 +68,6 @@ function Manager() {
     tempOrders,
     setTempOrders
   );
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   return (
     <div className={classes.root}>
@@ -89,9 +106,11 @@ function Manager() {
         <NewOrders />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Menu setLoading={setLoading} />
+        <Menu setLoading={setIsLoading} />
       </TabPanel>
-      <TabPanel value={value} index={3}></TabPanel>
+      <TabPanel value={value} index={3}>
+        <Settings />
+      </TabPanel>
     </div>
   );
 }

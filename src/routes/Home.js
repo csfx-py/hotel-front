@@ -1,12 +1,13 @@
+import { Link } from "react-router-dom";
 import {
   AppBar,
   Button,
   Grid,
+  IconButton,
   makeStyles,
   Toolbar,
   Typography,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
 import {
   AiFillDatabase,
   AiFillHeart,
@@ -14,6 +15,7 @@ import {
   AiOutlineQrcode,
 } from "react-icons/ai";
 import HomeTop from "../images/HomeTop.svg";
+import logo from "../images/logo.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,6 +50,16 @@ function Home() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
+          <Link to="/">
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="menu"
+            >
+              <img src={logo} alt="Hotel engine" />
+            </IconButton>
+          </Link>
           <Typography variant="h6" className={classes.title}>
             <Link to="/">Hotel Engine</Link>
           </Typography>
@@ -164,11 +176,11 @@ function Home() {
       >
         <Grid item xs={3} className={classes.gridItem}>
           Made with <AiFillHeart color="#ef4444" /> by{" "}
-          <Link to="https://github.com/csfx-py">
+          <a href="https://github.com/csfx-py">
             <Typography variant="h6" color="secondary" align="center">
               Shreyas Prabhu
             </Typography>
-          </Link>
+          </a>
         </Grid>
       </Grid>
     </div>
