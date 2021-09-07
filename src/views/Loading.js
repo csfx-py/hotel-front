@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     height: "5rem",
     width: "5rem",
     color: theme.palette.secondary.main,
-    animation: `spin 1.5s ${theme.transitions.easing.easeInOut} infinite`,
+    animation: `$spin 1.5s ${theme.transitions.easing.easeInOut} infinite`,
   },
   "@keyframes spin": {
     "0%": {
