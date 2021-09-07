@@ -45,9 +45,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const deleteUser = async (uname) => {
+  const deleteUser = async (id) => {
     try {
-      const res = await api.delete(`/users/${uname}`);
+      const res = await api.delete(`/users/${id}`);
       if (res.status === 200 && res.data) {
         setUsers(res.data);
         toast("User deleted successfully", "success");
@@ -148,6 +148,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         adminLogin,
+        users,
         getAllUsers,
         deleteUser,
         user,
