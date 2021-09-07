@@ -17,11 +17,11 @@ const useStyles = makeStyles((theme) => ({
 function Client() {
   const { shopName, tableID } = useParams();
   const history = useHistory();
-  const { conn, fetchMenu, orders, setOrders } = useContext(ClientContext);
+  const { conn, fetchMenu } = useContext(ClientContext);
 
   const classes = useStyles();
 
-  const { sendCart } = useClientSocket(shopName, tableID, orders, setOrders);
+  const { sendCart } = useClientSocket(shopName, tableID);
 
   const [value, setValue] = useState(0);
 

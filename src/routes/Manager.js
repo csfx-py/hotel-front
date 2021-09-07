@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
 function Manager() {
   const classes = useStyles();
 
-  const { toast, setIsLoading } = useContext(UtilityContext);
   const { user, checkCookie, logout } = useContext(AuthContext);
   const history = useHistory();
 
@@ -60,13 +59,8 @@ function Manager() {
     setValue(newValue);
   };
 
-  const { setTables, tempOrders, setTempOrders } = useContext(DataContext);
-  const { removeItem, removeConn } = useManagerSocket(
-    user.shopName,
-    toast,
-    setTables,
-    tempOrders,
-    setTempOrders
+  const { removeTempItem, removeItem, removeConn } = useManagerSocket(
+    user.shopName
   );
 
   return (
@@ -103,10 +97,10 @@ function Manager() {
         <Orders removeItem={removeItem} removeConn={removeConn} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <NewOrders />
+        <NewOrders removeTempItem={removeTempItem} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Menu setLoading={setIsLoading} />
+        <Menu />
       </TabPanel>
       <TabPanel value={value} index={3}>
         <Settings />
