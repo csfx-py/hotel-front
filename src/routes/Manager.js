@@ -80,7 +80,15 @@ function Manager() {
           <Typography variant="h6" className={classes.title}>
             Hotel engine
           </Typography>
-          <Button color="inherit" onClick={logout}>
+          <Button
+            color="inherit"
+            onClick={(e) => {
+              const status = logout();
+              if (status) {
+                history.push("/login");
+              }
+            }}
+          >
             Logout
           </Button>
         </Toolbar>
