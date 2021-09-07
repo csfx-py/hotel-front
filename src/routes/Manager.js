@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { UtilityContext } from "../contexts/UtilityContext";
 import { AuthContext } from "../contexts/AuthContext";
-import { DataContext } from "../contexts/DataContext";
 import useManagerSocket from "../hooks/useManagerSocket";
 import {
   AppBar,

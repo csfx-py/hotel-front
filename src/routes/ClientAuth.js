@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import { BsFillShieldLockFill } from "react-icons/bs";
 import { useContext, useState } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ClientContext } from "../contexts/ClientContext";
 
 const useStyles = makeStyles((theme) => ({
