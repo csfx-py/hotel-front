@@ -61,9 +61,17 @@ function Orders({ removeItem, removeConn }) {
   const [rows, setRows] = useState([]);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tables]);
+  }, [rows]);
 
   const [tableName, setTableName] = useState("");
+
+  useEffect(() => {
+    if (tableName !== "") {
+      const table = tables.find((t) => t.tableID === tableName);
+      if (table) setRows(table.items);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tables]);
 
   const handleDelete = (row) => {
     removeItem(row, tableName);
@@ -107,6 +115,7 @@ function Orders({ removeItem, removeConn }) {
               rows.reduce((acc, cur) => acc + cur.total, 0)
             );
             removeConn(tableName);
+            setRows([]);
             setIsLoading(false);
           }}
         >
