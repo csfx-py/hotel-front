@@ -44,21 +44,6 @@ export const AuthProvider = ({ children }) => {
       return false;
     }
   };
-
-  const deleteUser = async (uname) => {
-    try {
-      const res = await api.delete(`/users/${uname}`);
-      if (res.status === 200 && res.data) {
-        setUsers(res.data);
-        toast("User deleted successfully", "success");
-        return true;
-      }
-    } catch (error) {
-      toast(error.response.data, "error");
-      return false;
-    }
-  };
-
   const register = async ({ name, email, password, shopName }) => {
     try {
       const res = await api.post("/register", {
