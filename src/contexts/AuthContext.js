@@ -9,12 +9,25 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const { toast } = useContext(UtilityContext);
   const [user, setUser] = useState({});
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
   const api = axios.create({
     baseURL: `http://localhost:5000/auth`,
     withCredentials: true,
     headers: { auth: user?.token ? user.token : "" },
   });
+
+  const adminLogin = async (password) => {
+    try {
+      const res = await api.post("/admin", { password });
+      if (res.status === 200) {
+        setIsAdminLoggedIn(true);
+        toast("Admin logged in successfully", "success");
+      }
+    } catch (error) {
+      toast(error.response.message, "error");
+    }
+  };
 
   const register = async ({ name, email, password, shopName }) => {
     try {
@@ -103,7 +116,16 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, checkCookie, register, login, logout, changePassword }}
+      value={{
+        isAdminLoggedIn,
+        adminLogin,
+        user,
+        checkCookie,
+        register,
+        login,
+        logout,
+        changePassword,
+      }}
     >
       {children}
     </AuthContext.Provider>
