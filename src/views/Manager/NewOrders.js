@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
 
 const columns = [
   {
-    id: "client",
+    id: "tableID",
     label: "Table",
     minWidth: 100,
     align: "center",
@@ -43,19 +43,19 @@ const columns = [
   },
 ];
 
-function NewOrders() {
+function NewOrders({ removeTempItem }) {
   const classes = useStyles();
 
   const [rows, setRows] = useState([]);
-  const { tempOrders, setTempOrders } = useContext(DataContext);
+  const { tempOrders } = useContext(DataContext);
 
   useEffect(() => {
-    setRows([...rows, ...tempOrders]);
+    setRows(tempOrders);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tempOrders]);
 
   const handleDelete = (row) => {
-    setRows(rows.filter((r) => r.id !== row.id));
+    removeTempItem(row);
   };
 
   return (
