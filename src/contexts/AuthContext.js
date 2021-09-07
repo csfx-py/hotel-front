@@ -23,9 +23,11 @@ export const AuthProvider = ({ children }) => {
       if (res.status === 200) {
         setIsAdminLoggedIn(true);
         toast("Admin logged in successfully", "success");
+        return true;
       }
     } catch (error) {
-      toast(error.response.message, "error");
+      toast(error.response.data, "error");
+      return false;
     }
   };
 
