@@ -6,7 +6,7 @@ import { UtilityContext } from "./UtilityContext";
 export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
-  const { toast, setLoading } = useContext(UtilityContext);
+  const { toast, setIsLoading } = useContext(UtilityContext);
   const { user } = useContext(AuthContext);
 
   const api = axios.create({
@@ -44,12 +44,12 @@ export const DataProvider = ({ children }) => {
       if (res.status === 200 && res.data.length > 0) {
         fetchMenu(user.shopName);
         toast(`${itemName} added`, "success");
-        return setLoading(false);
+        return setIsLoading(false);
       }
       return toast(res.data);
     } catch (e) {
       toast(e.response.data, "error");
-      return setLoading(false);
+      return setIsLoading(false);
     }
   };
 
@@ -64,12 +64,12 @@ export const DataProvider = ({ children }) => {
       if (res.status === 200 && res.data.length > 0) {
         fetchMenu(user.shopName);
         toast(`${name} removed`, "success");
-        return setLoading(false);
+        return setIsLoading(false);
       }
       return toast(res.data);
     } catch (e) {
       toast(e.response.data, "error");
-      return setLoading(false);
+      return setIsLoading(false);
     }
   };
 
@@ -90,12 +90,12 @@ export const DataProvider = ({ children }) => {
       });
       if (res.status === 200 && res.data.length > 0) {
         toast("Saved", "success");
-        return setLoading(false);
+        return setIsLoading(false);
       }
       return toast(res.data);
     } catch (e) {
       toast(e.response.data, "error");
-      return setLoading(false);
+      return setIsLoading(false);
     }
   };
 

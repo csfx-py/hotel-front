@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import DataTable from "../../components/DataTable";
-import { AuthContext } from "../..//contexts/AuthContext";
 import { ClientContext } from "../..//contexts/ClientContext";
+import { UtilityContext } from "../../contexts/UtilityContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,7 +31,7 @@ const columns = [
 function Menu() {
   const classes = useStyles();
 
-  const { toast } = useContext(AuthContext);
+  const { toast } = useContext(UtilityContext);
 
   const { menu, cart, setCart } = useContext(ClientContext);
 

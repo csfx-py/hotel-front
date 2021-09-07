@@ -7,7 +7,7 @@ import { UtilityContext } from "./UtilityContext";
 export const ClientContext = createContext();
 
 const ClientProviderFn = ({ children, history }) => {
-  const { toast, setLoading } = useContext(UtilityContext);
+  const { toast, setIsLoading } = useContext(UtilityContext);
   const { user } = useContext(AuthContext);
 
   const api = axios.create({
@@ -25,29 +25,29 @@ const ClientProviderFn = ({ children, history }) => {
   const [orders, setOrders] = useState([]);
 
   const fetchMenu = async (shopName) => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const response = await api.get("/menu", {
         params: { shopName },
       });
-      setLoading(false);
+      setIsLoading(false);
       if (response.status === 200 && response.data.length > 0)
         return setMenu(response.data);
     } catch (error) {
-      setLoading(false);
+      setIsLoading(false);
       toast(error.response.data, "error");
     }
   };
 
   const checkTable = async (shopName, tableID, pass) => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const response = await api.post("/hotel", {
         shopName,
         tableID,
         pass,
       });
-      setLoading(false);
+      setIsLoading(false);
 
       if (response.status === 200 && response.data) {
         setConn(true);
@@ -57,7 +57,7 @@ const ClientProviderFn = ({ children, history }) => {
       }
       return false;
     } catch (error) {
-      setLoading(false);
+      setIsLoading(false);
       toast(error.response.data, "error");
       if (error.response.status === 404) history.push("/");
       return false;
@@ -65,21 +65,21 @@ const ClientProviderFn = ({ children, history }) => {
   };
 
   const checkOut = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const response = await api.post("/checkout", {
         cart,
         shopName: conn.shopName,
         tableID: conn.tableID,
       });
-      setLoading(false);
+      setIsLoading(false);
       if (response.status === 200) {
         toast(response.data, "success");
         return true;
       }
       return false;
     } catch (error) {
-      setLoading(false);
+      setIsLoading(false);
       toast(error.response.data, "error");
       return false;
     }

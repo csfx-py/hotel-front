@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { Button, makeStyles, Typography } from "@material-ui/core";
 import DataTable from "../../components/DataTable";
-import { AuthContext } from "../..//contexts/AuthContext";
 import { ClientContext } from "../..//contexts/ClientContext";
+import { UtilityContext } from "../../contexts/UtilityContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,16 +41,16 @@ const columns = [
 function Cart({ shopName, tableID, sendCart }) {
   const classes = useStyles();
 
-  const { setLoading } = useContext(AuthContext);
+  const { setIsLoading } = useContext(UtilityContext);
 
   const { cart, setCart } = useContext(ClientContext);
 
   const [rows, setRows] = useState(cart);
 
   const handleDelete = async (item) => {
-    setLoading(true);
+    setIsLoading(true);
     await setCart(cart.filter((i) => i.id !== item.id));
-    setLoading(false);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -67,10 +67,10 @@ function Cart({ shopName, tableID, sendCart }) {
         variant="contained"
         color="primary"
         onClick={async (e) => {
-          setLoading(true);
+          setIsLoading(true);
           sendCart(rows);
           setCart([]);
-          setLoading(false);
+          setIsLoading(false);
         }}
       >
         Order
