@@ -49,10 +49,12 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await api.delete(`/users/${id}`);
       if (res.status === 200 && res.data) {
-        setUsers(res.data);
+        setUsers(users.filter((user) => user._id !== id));
         toast("User deleted successfully", "success");
         return true;
       }
+      toast(res.data);
+      return false;
     } catch (error) {
       toast(error.response.data, "error");
       return false;

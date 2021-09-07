@@ -72,7 +72,7 @@ function Admin() {
   }, [users]);
 
   const handleDelete = (row) => {
-    deleteUser(row.id);
+    deleteUser(row._id);
   };
 
   return (
