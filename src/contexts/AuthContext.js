@@ -9,7 +9,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const { toast } = useContext(UtilityContext);
   const [user, setUser] = useState({});
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [users, setUsers] = useState([]);
 
   const api = axios.create({
     baseURL: `http://localhost:5000/auth`,
@@ -20,9 +20,37 @@ export const AuthProvider = ({ children }) => {
   const adminLogin = async (password) => {
     try {
       const res = await api.post("/admin", { password });
-      if (res.status === 200) {
-        setIsAdminLoggedIn(true);
+      if (res.status === 200 && res.data) {
+        const { admin } = jwt_decode(res.data);
+        setUser({ admin, token: res.data });
         toast("Admin logged in successfully", "success");
+        return true;
+      }
+    } catch (error) {
+      toast(error.response.data, "error");
+      return false;
+    }
+  };
+
+  const getAllUsers = async () => {
+    try {
+      const res = await api.get("/users");
+      if (res.status === 200 && res.data) {
+        setUsers(res.data);
+        return true;
+      }
+    } catch (error) {
+      toast(error.response.data, "error");
+      return false;
+    }
+  };
+
+  const deleteUser = async (uname) => {
+    try {
+      const res = await api.delete(`/users/${uname}`);
+      if (res.status === 200 && res.data) {
+        setUsers(res.data);
+        toast("User deleted successfully", "success");
         return true;
       }
     } catch (error) {
@@ -119,7 +147,6 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
-        isAdminLoggedIn,
         adminLogin,
         user,
         checkCookie,
