@@ -11,6 +11,8 @@ import Manager from "./routes/Manager";
 import Loading from "./views/Loading";
 import Client from "./routes/Client";
 import ClientAuth from "./routes/ClientAuth";
+import Admin from "./routes/Admin";
+import AdminLogin from "./components/AdminLogin";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,6 +33,8 @@ function App() {
               <Route exact path="/" component={Home} />
               <Route exact path="/login" component={LoginCard} />
               <Route exact path="/register" component={RegisterCard} />
+              <Route exact path="/admin-auth" component={AdminLogin} />
+              <Route exact path="/admin" component={Admin} />
               <Route exact path="/hotel" component={Manager} />
               <Route
                 path="/hotel/:shopName/:tableID/auth"
