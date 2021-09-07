@@ -1,23 +1,20 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import socketIOClient from "socket.io-client";
+import { ClientContext } from "../contexts/ClientContext";
 
 const SOCKET_SERVER_URL = "http://localhost:5000";
 
-export default function useClientSocket(
-  shopName,
-  tableID,
-  orders,
-  setOrders,
-) {
+export default function useClientSocket(shopName, tableID) {
   const socketRef = useRef();
+  const { setOrders } = useContext(ClientContext);
 
   useEffect(() => {
     socketRef.current = socketIOClient(SOCKET_SERVER_URL, {
-      query: { role: "client", shopName, tableID },
+      query: { shopName, tableID },
     });
 
     socketRef.current.on("orders", (items) => {
-      setOrders([...orders, ...items]);
+      setOrders(items);
     });
 
     socketRef.current.on("complete", () => {
@@ -32,7 +29,7 @@ export default function useClientSocket(
   }, [shopName, tableID]);
 
   const sendCart = (data) => {
-    socketRef.current.emit("clientOrder", data, tableID);
+    socketRef.current.emit("clientOrder", data);
   };
 
   return { sendCart };
