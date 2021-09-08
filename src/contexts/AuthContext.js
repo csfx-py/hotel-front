@@ -129,6 +129,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const getOtp = async (name) => {
+    try {
+      const res = await api.post("/get-otp", { name });
+      if (res.status === 200 && res.data) {
+        toast("OTP sent to your Phone", "success");
+        return true;
+      }
+      toast(res.data);
+      return false;
+    } catch (e) {
+      toast(e.response.data, "error");
+      return false;
+    }
+  };
+
   const checkCookie = async () => {
     const cookie = Cookie.get("Authid");
 
@@ -160,6 +175,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         changePassword,
+        getOtp,
       }}
     >
       {children}
