@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
 
   const api = axios.create({
-    baseURL: `http://localhost:5000/auth`,
+    baseURL: `https://hoen-api.herokuapp.com/auth`,
     withCredentials: true,
     headers: { auth: user?.token ? user.token : "" },
   });
