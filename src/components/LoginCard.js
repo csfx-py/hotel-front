@@ -110,11 +110,18 @@ function LoginCard() {
               Sign in
             </Button>
           </form>
-          <Typography>
+          <Typography gutterBottom>
             Don't have an account?{" "}
             <Link to="/register">
               <Typography color="primary" component="span">
                 Sign up here
+              </Typography>
+            </Link>
+          </Typography>
+          <Typography>
+            <Link to="/reset">
+              <Typography color="primary" component="span">
+                Forgot password?
               </Typography>
             </Link>
           </Typography>
