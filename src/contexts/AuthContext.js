@@ -144,6 +144,36 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const verifyOtp = async (name, otp) => {
+    try {
+      const res = await api.post("/verify-otp", { name, otp });
+      if (res.status === 200 && res.data) {
+        toast("OTP verified successfully", "success");
+        return true;
+      }
+      toast(res.data);
+      return false;
+    } catch (e) {
+      toast(e.response.data, "error");
+      return false;
+    }
+  };
+
+  const resetPass = async (name, otp, password) => {
+    try {
+      const res = await api.post("/reset-pass", { name, otp, password });
+      if (res.status === 200) {
+        toast("Password reset successfully", "success");
+        return true;
+      }
+      toast(res.data);
+      return false;
+    } catch (e) {
+      toast(e.response.data, "error");
+      return false;
+    }
+  };
+
   const checkCookie = async () => {
     const cookie = Cookie.get("Authid");
 
@@ -176,6 +206,8 @@ export const AuthProvider = ({ children }) => {
         logout,
         changePassword,
         getOtp,
+        verifyOtp,
+        resetPass,
       }}
     >
       {children}

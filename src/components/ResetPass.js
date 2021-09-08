@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import { useContext, useState } from "react";
 import { BsFillShieldLockFill } from "react-icons/bs";
+import { useHistory } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import { UtilityContext } from "../contexts/UtilityContext";
 
@@ -38,7 +39,9 @@ function ResetPass() {
   const classes = useStyles();
 
   const { setIsLoading, toast } = useContext(UtilityContext);
-  const { getOtp } = useContext(AuthContext);
+  const { getOtp, verifyOtp, resetPass } = useContext(AuthContext);
+
+  const history = useHistory();
 
   const [data, setData] = useState({
     name: "",
@@ -47,12 +50,42 @@ function ResetPass() {
     confirm: "",
   });
 
+  const passPattern =
+    /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!#.])[A-Za-z\d$@$!%*?&.]{6,20}/;
+
+  const [isNameDisable, setIsNameDisable] = useState(false);
   const [isOtpDisable, setIsOtpDisable] = useState(true);
   const [isPassDisable, setIsPassDisable] = useState(true);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!passPattern.test(data.newPass)) {
+      toast(
+        `Password must be atleast 6 characters long, 
+      must contain atleast one uppercase, 
+      one lowercase, 
+      one number and 
+      one special character`,
+        "error"
+      );
+      setData({ ...data, newPass: "", confirm: "" });
+      return;
+    }
+    if (data.newPass !== data.confirm) {
+      toast("Password and Confirm Password must be same", "error");
+      setData({ ...data, newPass: "", confirm: "" });
+      return;
+    }
+    setIsLoading(true);
+    const { name, otp, newPass } = data;
+    const res = await resetPass(name, otp, newPass);
+    setIsLoading(false);
+    if (res) return history.push("/login");
   };
 
   return (
@@ -65,7 +98,7 @@ function ResetPass() {
       <Grid item>
         <Paper className={classes.paper} elevation={8}>
           <form
-            onSubmit={(params) => {}}
+            onSubmit={handleSubmit}
             autoComplete="off"
             className={classes.form}
           >
@@ -73,48 +106,13 @@ function ResetPass() {
             <Typography variant="h5" component="h2" align="center">
               Reset Password
             </Typography>
-            <Grid container>
-              <Grid item xs={6}>
-                <TextField
-                  label="Username"
-                  name="name"
-                  value={data.name}
-                  required
-                  fullWidth
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={5}>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  fullWidth
-                  className={classes.btn}
-                  onClick={async (e) => {
-                    if (!data.name.length > 0) {
-                      toast("Enter Username", "error");
-                      return;
-                    }
-                    setIsLoading(true);
-                    const res = await getOtp(data.name);
-                    setIsLoading(false);
-                    if (res) {
-                      setIsOtpDisable(false);
-                      return;
-                    }
-                  }}
-                >
-                  Request OTP
-                </Button>
-              </Grid>
-            </Grid>
-            {!isOtpDisable && (
+            {!isNameDisable && (
               <Grid container>
                 <Grid item xs={6}>
                   <TextField
-                    label="Enter OTP"
-                    name="otp"
-                    value={data.otp}
+                    label="Username"
+                    name="name"
+                    value={data.name}
                     required
                     fullWidth
                     onChange={handleChange}
@@ -126,47 +124,107 @@ function ResetPass() {
                     variant="contained"
                     fullWidth
                     className={classes.btn}
-                    onClick={(e) => {
-                      setIsPassDisable(false);
+                    onClick={async (e) => {
+                      if (!data.name.length > 0) {
+                        toast("Enter Username", "error");
+                        return;
+                      }
+                      setIsLoading(true);
+                      const res = await getOtp(data.name);
+                      setIsLoading(false);
+                      if (res) {
+                        setIsOtpDisable(false);
+                        setIsNameDisable(true);
+                        return;
+                      }
                     }}
                   >
-                    Submit OTP
+                    Request OTP
                   </Button>
                 </Grid>
               </Grid>
             )}
-            {!isPassDisable && (
-              <TextField
-                label="New Password"
-                name="newPass"
-                value={data.newPass}
-                type="password"
-                fullWidth
-                required
-                onChange={handleChange}
-              />
+            {!isOtpDisable && (
+              <>
+                <Grid container>
+                  <Grid item xs={6}>
+                    <TextField
+                      label="Enter OTP"
+                      name="otp"
+                      value={data.otp}
+                      required
+                      fullWidth
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={5}>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      fullWidth
+                      className={classes.btn}
+                      onClick={async (e) => {
+                        if (!data.otp.length > 0) {
+                          toast("Enter Otp", "error");
+                          return;
+                        }
+                        setIsLoading(true);
+                        const res = await verifyOtp(data.name, data.otp);
+                        setIsLoading(false);
+                        if (res) {
+                          setIsPassDisable(false);
+                          setIsOtpDisable(true);
+                          return;
+                        }
+                      }}
+                    >
+                      Submit OTP
+                    </Button>
+                  </Grid>
+                </Grid>
+                <Typography variant="caption" align="center">
+                  Please wait at-least 30 seconds before requesting another OTP
+                </Typography>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  fullWidth
+                  onClick={() => window.location.reload()}
+                >
+                  Re-Send OTP
+                </Button>
+              </>
             )}
             {!isPassDisable && (
-              <TextField
-                label="Confirm New Password"
-                name="confirm"
-                value={data.confirm}
-                type="password"
-                fullWidth
-                required
-                onChange={handleChange}
-              />
-            )}
-            {!isPassDisable && (
-              <Button
-                type="submit"
-                color="primary"
-                variant="contained"
-                className={classes.btn}
-                fullWidth
-              >
-                Submit
-              </Button>
+              <>
+                <TextField
+                  label="New Password"
+                  name="newPass"
+                  value={data.newPass}
+                  type="password"
+                  fullWidth
+                  required
+                  onChange={handleChange}
+                />
+                <TextField
+                  label="Confirm New Password"
+                  name="confirm"
+                  value={data.confirm}
+                  type="password"
+                  fullWidth
+                  required
+                  onChange={handleChange}
+                />
+                <Button
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  className={classes.btn}
+                  fullWidth
+                >
+                  Submit
+                </Button>
+              </>
             )}
           </form>
         </Paper>
