@@ -10,6 +10,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
+import { UtilityContext } from "../contexts/UtilityContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,6 +33,19 @@ const useStyles = makeStyles((theme) => ({
   btn: {
     margin: theme.spacing(2),
   },
+  input: {
+    "& input[type=number]": {
+      "-moz-appearance": "textfield",
+    },
+    "& input[type=number]::-webkit-outer-spin-button": {
+      "-webkit-appearance": "none",
+      margin: 0,
+    },
+    "& input[type=number]::-webkit-inner-spin-button": {
+      "-webkit-appearance": "none",
+      margin: 0,
+    },
+  },
 }));
 
 function RegisterCard() {
@@ -45,10 +59,14 @@ function RegisterCard() {
   const mailPattern =
     /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 
-  const { register, toast } = useContext(AuthContext);
+  const phonePattern = /^[6789]\d{9}$/;
+
+  const { toast } = useContext(UtilityContext);
+  const { register } = useContext(AuthContext);
   const [credentials, setCredentials] = useState({
     name: "",
     email: "",
+    phone: "",
     password: "",
     shopName: "",
   });
@@ -60,8 +78,16 @@ function RegisterCard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, password, shopName } = credentials;
-    if (name && email && password && shopName) {
+    const { name, email, phone, password, shopName } = credentials;
+    if (name && email && phone && password && shopName) {
+      if (!mailPattern.test(email)) {
+        toast("Invalid email address", "error");
+        return;
+      }
+      if (!phonePattern.test(phone)) {
+        toast("Invalid phone number", "error");
+        return;
+      }
       if (!passPattern.test(password)) {
         toast(
           `Password must be at least 6 characters long
@@ -73,13 +99,15 @@ function RegisterCard() {
         );
         return;
       }
-      if (!mailPattern.test(email)) {
-        toast("Invalid email address", "error");
-        return;
-      }
       try {
-        const res = await register({ name, email, password, shopName });
-        setCredentials({ name: "", email: "", password: "", shopName: "" });
+        const res = await register({ name, email, phone, password, shopName });
+        setCredentials({
+          name: "",
+          email: "",
+          password: "",
+          phone: "",
+          shopName: "",
+        });
         if (res) history.push("/hotel");
       } catch (err) {
         toast(err.message, "error");
@@ -125,6 +153,16 @@ function RegisterCard() {
               label="Email"
               name="email"
               value={credentials.email}
+              fullWidth
+              required
+              onChange={handleChange}
+            />
+            <TextField
+              label="Phone Number"
+              type="number"
+              className={classes.input}
+              name="phone"
+              value={credentials.phone}
               fullWidth
               required
               onChange={handleChange}
