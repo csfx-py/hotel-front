@@ -10,7 +10,7 @@ export const DataProvider = ({ children }) => {
   const { user } = useContext(AuthContext);
 
   const api = axios.create({
-    baseURL: `https://hoen-api.herokuapp.com/hotel`,
+    baseURL: `https://localhost:5000/hotel`,
     withCredentials: true,
     headers: { auth: user?.token ? user.token : "" },
   });

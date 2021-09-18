@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef } from "react";
 import socketIOClient from "socket.io-client";
 import { ClientContext } from "../contexts/ClientContext";
 
-const SOCKET_SERVER_URL = "https://hoen-api.herokuapp.com";
+const SOCKET_SERVER_URL = "https://localhost:5000";
 
 export default function useClientSocket(shopName, tableID) {
   const socketRef = useRef();

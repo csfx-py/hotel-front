@@ -11,7 +11,7 @@ const ClientProviderFn = ({ children, history }) => {
   const { user } = useContext(AuthContext);
 
   const api = axios.create({
-    baseURL: `https://hoen-api.herokuapp.com/client`,
+    baseURL: `https://localhost:5000/client`,
     withCredentials: true,
     headers: {
       "Content-Type": "application/json",

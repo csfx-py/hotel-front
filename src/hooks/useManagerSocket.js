@@ -3,7 +3,7 @@ import socketIOClient from "socket.io-client";
 import { DataContext } from "../contexts/DataContext";
 import { UtilityContext } from "../contexts/UtilityContext";
 
-const SOCKET_SERVER_URL = "https://hoen-api.herokuapp.com/";
+const SOCKET_SERVER_URL = "https://localhost:5000/";
 
 export default function useManagerSocket(shopName) {
   const socketRef = useRef();
