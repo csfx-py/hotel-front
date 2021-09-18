@@ -10,6 +10,7 @@ import { BsFillShieldLockFill } from "react-icons/bs";
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { Link, useHistory } from "react-router-dom";
+import { UtilityContext } from "../contexts/UtilityContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,6 +40,7 @@ function LoginCard() {
 
   const history = useHistory();
 
+  const { setIsLoading } = useContext(UtilityContext);
   const { login } = useContext(AuthContext);
 
   const [credentials, setCredentials] = useState({
@@ -53,16 +55,20 @@ function LoginCard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const { name, password } = credentials;
     if (name && password) {
       try {
         const res = await login({ name, password });
         setCredentials({ name: "", password: "" });
+        setIsLoading(false);
         if (res) history.push("/hotel");
       } catch (err) {
+        setIsLoading(false);
         console.error(err);
       }
     }
+    setIsLoading(false);
   };
 
   return (

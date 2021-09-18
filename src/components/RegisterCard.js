@@ -61,7 +61,7 @@ function RegisterCard() {
 
   const phonePattern = /^[6789]\d{9}$/;
 
-  const { toast } = useContext(UtilityContext);
+  const { toast, setIsLoading } = useContext(UtilityContext);
   const { register } = useContext(AuthContext);
   const [credentials, setCredentials] = useState({
     name: "",
@@ -78,17 +78,21 @@ function RegisterCard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const { name, email, phone, password, shopName } = credentials;
     if (name && email && phone && password && shopName) {
       if (!mailPattern.test(email)) {
+        setIsLoading(false);
         toast("Invalid email address", "error");
         return;
       }
       if (!phonePattern.test(phone)) {
+        setIsLoading(false);
         toast("Invalid phone number", "error");
         return;
       }
       if (!passPattern.test(password)) {
+        setIsLoading(false);
         toast(
           `Password must be at least 6 characters long
            and contain at least one lowercase letter, 
@@ -108,11 +112,14 @@ function RegisterCard() {
           phone: "",
           shopName: "",
         });
+        setIsLoading(false);
         if (res) history.push("/hotel");
       } catch (err) {
+        setIsLoading(false);
         toast(err.message, "error");
       }
     }
+    setIsLoading(false);
   };
 
   return (
