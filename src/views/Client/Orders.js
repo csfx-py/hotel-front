@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
 import { makeStyles, Typography } from "@material-ui/core";
 import DataTable from "../../components/DataTable";
 import { ClientContext } from "../..//contexts/ClientContext";
@@ -31,17 +31,13 @@ function Orders() {
   const classes = useStyles();
 
   const { orders } = useContext(ClientContext);
-  const [rows, setRows] = useState([]);
-
-  useEffect(() => {
-    setRows(orders);
-  }, [orders]);
+  const orderTotal = useMemo(() => orders.reduce((acc, curr) => acc + curr.total, 0)  , [orders]);
 
   return (
     <div className={classes.root}>
-      <DataTable rows={rows} columns={columns} />
+      <DataTable rows={orders} columns={columns} />
       <Typography variant="h6" gutterBottom color="secondary">
-        Total: {orders.reduce((acc, curr) => acc + curr.total, 0)}
+        Total: {orderTotal}
       </Typography>
     </div>
   );
