@@ -105,14 +105,18 @@ function RegisterCard() {
       }
       try {
         const res = await register({ name, email, phone, password, shopName });
-        setCredentials({
-          name: "",
-          email: "",
-          password: "",
-          phone: "",
-          shopName: "",
-        });
         setIsLoading(false);
+
+        if (res) {
+          setCredentials({
+            name: "",
+            email: "",
+            password: "",
+            phone: "",
+            shopName: "",
+          });
+        }
+
         if (res) history.push("/hotel");
       } catch (err) {
         setIsLoading(false);
