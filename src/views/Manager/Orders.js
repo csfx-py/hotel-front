@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
 import { UtilityContext } from "../../contexts/UtilityContext";
 import { DataContext } from "../../contexts/DataContext";
 import {
@@ -59,6 +59,9 @@ function Orders({ removeItem, removeConn }) {
   const { setIsLoading } = useContext(UtilityContext);
   const { tables, saveOrder } = useContext(DataContext);
   const [rows, setRows] = useState([]);
+
+  const orderTotal = useMemo(() => rows.reduce((acc, cur) => acc + cur.total, 0), [rows]);
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rows]);
@@ -101,7 +104,7 @@ function Orders({ removeItem, removeConn }) {
       </FormControl>
       <DataTable rows={rows} columns={columns} handleDelete={handleDelete} />
       <Typography variant="h6" gutterBottom color="secondary">
-        Total: {rows.reduce((acc, cur) => acc + cur.total, 0)}
+        Total: {orderTotal}
       </Typography>
       {rows.length > 0 && (
         <Button
