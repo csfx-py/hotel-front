@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import { useState } from "react";
 import { MdAddShoppingCart, MdDeleteForever } from "react-icons/md";
+import swal from 'sweetalert';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,8 +66,18 @@ function DataTable({ columns, rows, handleDelete, handleAdd }) {
                           <Button
                             color="secondary"
                             size="small"
-                            onClick={(e) => {
-                              handleDelete(row);
+                            onClick={async(e) => {
+                              const confirmed = await swal({
+                                title: 'Are you sure!?',
+                                text: `Processing further will permanently delete this item.`,
+                                icon: 'warning',
+                                buttons: true,
+                                dangerMode: true
+                              });
+                              if (confirmed) {
+                                handleDelete(row);
+                              }
+
                             }}
                           >
                             <MdDeleteForever fontSize="1.4rem" />
